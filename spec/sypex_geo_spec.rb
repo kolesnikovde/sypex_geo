@@ -1,3 +1,4 @@
+require './spec/spec_helper'
 require 'sypex_geo'
 
 describe SypexGeo do
