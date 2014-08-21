@@ -20,18 +20,20 @@ Or install it yourself as:
 
 ## Usage
 
-    require 'sypex_geo'
+```ruby
+require 'sypex_geo'
 
-    db = SypexGeo::Database.new('./sypex_geo_city_max.dat')
-    db.lookup(<IPv4 address>)
+db = SypexGeo::Database.new('./sypex_geo_city_max.dat')
+db.lookup(<IPv4 address>)
 
-    # "memory_mode"
-    db = SypexGeo::MemoryDatabase.new('./sypex_geo_city_max.dat')
-    db.lookup(<IPv4 address>)
+# "memory_mode"
+db = SypexGeo::MemoryDatabase.new('./sypex_geo_city_max.dat')
+db.lookup(<IPv4 address>)
+```
 
 ## Testing
 
-    SYPEXGEO_CITY_MAX_DB=./sypexgeo_city_max.dat rspec
+    $ SYPEXGEO_CITY_MAX_DB=./sypexgeo_city_max.dat rspec
 
 ## License
 
