@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['kolesnikovde@gmail.com']
   spec.summary       = 'Sypex Geo IP database adapter for Ruby.'
   spec.description   = 'Sypex Geo IP database adapter for Ruby.'
-  spec.homepage      = ''
+  spec.homepage      = 'https://github.com/kolesnikovde/sypex_geo'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0")
