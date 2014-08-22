@@ -1,8 +1,6 @@
 *.gem
-pkg/
-.bundle
-.config
-Gemfile.lock
-coverage
-tmp
-*.bundle
+/.bundle
+/Gemfile.lock
+/pkg
+/tmp
+/coverage
