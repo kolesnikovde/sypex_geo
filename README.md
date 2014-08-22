@@ -14,10 +14,6 @@ And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install sypex_geo
-
 ## Usage
 
 ```ruby
@@ -25,6 +21,54 @@ require 'sypex_geo'
 
 db = SypexGeo::Database.new('./sypex_geo_city_max.dat')
 db.lookup(<IPv4 address>)
+# => {
+#   city: {
+#     id: 524901,
+#     lat: 55,
+#     lon: 37,
+#     name_ru: 'Москва',
+#     name_en: 'Moscow',
+#     okato: '45'
+#   },
+#   country: {
+#     id: 185,
+#     iso: 'RU'
+#   },
+#   region: nil
+# }
+
+# Query details.
+db.lookup(<IPv4 address>, true)
+# => {
+#   city: {
+#     id: 524901,
+#     lat: 55,
+#     lon: 37,
+#     name_ru: 'Москва',
+#     name_en: 'Moscow',
+#     okato: '45'
+#   },
+#   region: {
+#     id: 524894,
+#     name_ru: 'Москва',
+#     name_en: 'Moskva',
+#     lat: 55,
+#     lon: 37,
+#     iso: 'RU-MOW',
+#     timezone: 'Europe/Moscow',
+#     okato: '45'
+#   },
+#   country: {
+#     id: 185,
+#     iso: 'RU',
+#     continent: 'EU',
+#     lat: 60,
+#     lon: 100,
+#     name_ru: 'Россия',
+#     name_en: 'Russia',
+#     timezone: 'Europe/Moscow'
+#   }
+# }
 
 # "memory_mode"
 db = SypexGeo::MemoryDatabase.new('./sypex_geo_city_max.dat')
