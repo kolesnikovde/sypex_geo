@@ -1,4 +1,7 @@
 [![Gem Version](https://badge.fury.io/rb/sypex_geo.svg)](http://badge.fury.io/rb/sypex_geo)
+[![Build Status](https://travis-ci.org/kolesnikovde/sypex_geo.svg?branch=master)](https://travis-ci.org/kolesnikovde/sypex_geo)
+[![Code Climate](https://codeclimate.com/github/kolesnikovde/sypex_geo/badges/gpa.svg)](https://codeclimate.com/github/kolesnikovde/sypex_geo)
+[![Test Coverage](https://codeclimate.com/github/kolesnikovde/sypex_geo/badges/coverage.svg)](https://codeclimate.com/github/kolesnikovde/sypex_geo)
 
 # SypexGeo
 

@@ -6,11 +6,11 @@ rvm:
   - 2.1.0
 
 env:
-  - SYPEXGEO_CITY_MAX_DB=sypexgeo_city_max.dat
+  - SYPEXGEO_CITY_MAX_DB=SxGeoCityMax.dat
 
 before_script:
-  - '[ -f sypexgeo_city_max.dat ] || (wget http://sypexgeo.net/files/SxGeoCityMax_utf8.zip && unzip SxGeoCityMax_utf8.zip && mv SxGeoCityMax.dat sypexgeo_city_max.dat)'
+  - 'wget http://sypexgeo.net/files/SxGeoCityMax_utf8.zip && unzip SxGeoCityMax_utf8.zip'
 
 addons:
   code_climate:
-    repo_token: 15e49d47a87a130d4a3cde0bb2ce14fe9053f525e92495a215027aff3e552368 
+    repo_token: 15e49d47a87a130d4a3cde0bb2ce14fe9053f525e92495a215027aff3e552368
