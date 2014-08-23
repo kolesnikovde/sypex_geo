@@ -1,5 +1,8 @@
+# coding: utf-8
+
 require './spec/spec_helper'
 require 'sypex_geo'
+require 'ipaddr'
 
 describe SypexGeo do
   let(:demo_ip) do
@@ -87,10 +90,16 @@ describe SypexGeo do
         expect(subject.lookup('255.0.0.0')).to be_nil
       end
 
-      it 'raises IPAddr::InvalidAddressError if IP address is invalid' do
+      it 'raises error if IP address is invalid' do
+        error = if IPAddr.const_defined?('InvalidAddressError')
+                  IPAddr::InvalidAddressError
+                else
+                  ArgumentError
+                end
+
         expect do
           subject.lookup('1.invalid')
-        end.to raise_error(IPAddr::InvalidAddressError)
+        end.to raise_error(error)
       end
 
       it 'returns city info' do
