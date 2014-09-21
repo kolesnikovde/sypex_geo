@@ -144,17 +144,21 @@ module SypexGeo
       city = nil
       country = nil
 
-      if seek < @country_size
-        country = read_country(seek)
-      elsif city = read_city(seek)
-        region_seek = city.delete(:region_seek)
-        country_id = city.delete(:country_id)
-        country = { id: country_id, iso: COUNTRY_CODES[country_id - 1] }
-      end
+      if @country_size == 0
+        country = { id: seek, iso: COUNTRY_CODES[seek - 1] }
+      else
+        if seek < @country_size
+          country = read_country(seek)
+        elsif city = read_city(seek)
+          region_seek = city.delete(:region_seek)
+          country_id = city.delete(:country_id)
+          country = { id: country_id, iso: COUNTRY_CODES[country_id - 1] }
+        end
 
-      if full and region_seek
-        region = read_region(region_seek)
-        country = read_country(region.delete(:country_seek))
+        if full and region_seek
+          region = read_region(region_seek)
+          country = read_country(region.delete(:country_seek))
+        end
       end
 
       { city: city, region: region, country: country }

@@ -6,10 +6,12 @@ rvm:
   - 2.1.0
 
 env:
-  - SYPEXGEO_CITY_MAX_DB=SxGeoCityMax.dat
+  - SYPEXGEO_COUNTRY_DB=SxGeoCountry.dat
+  - SYPEXGEO_CITY_DB=SxGeoCity.dat
 
 before_script:
-  - 'wget http://sypexgeo.net/files/SxGeoCityMax_utf8.zip && unzip SxGeoCityMax_utf8.zip'
+  - 'wget http://sypexgeo.net/files/SxGeoCountry.zip && unzip SxGeoCountry.zip'
+  - 'wget http://sypexgeo.net/files/SxGeoCity_utf8.zip && unzip SxGeoCity_utf8.zip'
 
 addons:
   code_climate:

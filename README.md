@@ -22,7 +22,7 @@ And then execute:
 ```ruby
 require 'sypex_geo'
 
-db = SypexGeo::Database.new('./sypex_geo_city_max.dat')
+db = SypexGeo::Database.new('./SxGeoCity.dat')
 db.lookup(<IPv4 address>)
 # => {
 #   city: {
@@ -30,8 +30,7 @@ db.lookup(<IPv4 address>)
 #     lat: 55,
 #     lon: 37,
 #     name_ru: 'Москва',
-#     name_en: 'Moscow',
-#     okato: '45'
+#     name_en: 'Moscow'
 #   },
 #   country: {
 #     id: 185,
@@ -48,39 +47,32 @@ db.lookup(<IPv4 address>, true)
 #     lat: 55,
 #     lon: 37,
 #     name_ru: 'Москва',
-#     name_en: 'Moscow',
-#     okato: '45'
+#     name_en: 'Moscow'
 #   },
 #   region: {
 #     id: 524894,
 #     name_ru: 'Москва',
 #     name_en: 'Moskva',
-#     lat: 55,
-#     lon: 37,
-#     iso: 'RU-MOW',
-#     timezone: 'Europe/Moscow',
-#     okato: '45'
+#     iso: 'RU-MOW'
 #   },
 #   country: {
 #     id: 185,
 #     iso: 'RU',
-#     continent: 'EU',
 #     lat: 60,
 #     lon: 100,
 #     name_ru: 'Россия',
-#     name_en: 'Russia',
-#     timezone: 'Europe/Moscow'
+#     name_en: 'Russia'
 #   }
 # }
 
 # "memory_mode"
-db = SypexGeo::MemoryDatabase.new('./sypex_geo_city_max.dat')
+db = SypexGeo::MemoryDatabase.new('./SxGeoCity.dat')
 db.lookup(<IPv4 address>)
 ```
 
 ## Testing
 
-    $ SYPEXGEO_CITY_MAX_DB=./sypexgeo_city_max.dat rspec
+    $ SXGEO_DB=./SxGeo.dat SXGEO_CITY_DB=./SxGeoCity.dat rspec
 
 ## License
 

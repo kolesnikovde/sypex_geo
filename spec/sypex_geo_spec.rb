@@ -10,16 +10,27 @@ describe SypexGeo do
     '80.90.64.1'
   end
 
-  let(:default_db_file) do
-    File.expand_path(__FILE__ + '/../support/sypexgeo_city_max.dat')
-  end
-
   let(:invalid_db_file) do
     File.expand_path(__FILE__ + '/../support/invalid.dat')
   end
 
-  let(:db_file) do
-    ENV['SYPEXGEO_CITY_MAX_DB'] || default_db_file
+  let(:country_db_file) do
+    ENV['SYPEXGEO_COUNTRY_DB']
+  end
+
+  let(:city_db_file) do
+    ENV['SYPEXGEO_CITY_DB']
+  end
+
+  let(:country_info) do
+    {
+      city: nil,
+      country: {
+        id: 185,
+        iso: 'RU'
+      },
+      region: nil
+    }
   end
 
   let(:city_info) do
@@ -29,8 +40,7 @@ describe SypexGeo do
         lat: 55,
         lon: 37,
         name_ru: 'Москва',
-        name_en: 'Moscow',
-        okato: '45'
+        name_en: 'Moscow'
       },
       country: {
         id: 185,
@@ -47,28 +57,21 @@ describe SypexGeo do
         lat: 55,
         lon: 37,
         name_ru: 'Москва',
-        name_en: 'Moscow',
-        okato: '45'
+        name_en: 'Moscow'
       },
       region: {
         id: 524894,
         name_ru: 'Москва',
         name_en: 'Moskva',
-        lat: 55,
-        lon: 37,
-        iso: 'RU-MOW',
-        timezone: 'Europe/Moscow',
-        okato: '45'
+        iso: 'RU-MOW'
       },
       country: {
         id: 185,
         iso: 'RU',
-        continent: 'EU',
         lat: 60,
         lon: 100,
         name_ru: 'Россия',
-        name_en: 'Russia',
-        timezone: 'Europe/Moscow'
+        name_en: 'Russia'
       }
     }
   end
@@ -113,13 +116,23 @@ describe SypexGeo do
   end
 
   describe SypexGeo::Database do
-    subject(:db) { SypexGeo::Database.new(db_file) }
+    describe 'city db' do
+      subject(:db) { SypexGeo::Database.new(city_db_file) }
 
-    it_behaves_like 'geoip_database'
+      it_behaves_like 'geoip_database'
+    end
+
+    describe 'country db' do
+      subject(:db) { SypexGeo::Database.new(country_db_file) }
+
+      it 'returns country code' do
+        expect(subject.lookup(demo_ip)).to eq(country_info)
+      end
+    end
   end
 
   describe SypexGeo::MemoryDatabase do
-    subject(:db) { SypexGeo::MemoryDatabase.new(db_file) }
+    subject(:db) { SypexGeo::MemoryDatabase.new(city_db_file) }
 
     it_behaves_like 'geoip_database'
   end
