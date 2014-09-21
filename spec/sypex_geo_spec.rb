@@ -15,11 +15,11 @@ describe SypexGeo do
   end
 
   let(:country_db_file) do
-    ENV['SYPEXGEO_COUNTRY_DB']
+    ENV['SXGEO_DB']
   end
 
   let(:city_db_file) do
-    ENV['SYPEXGEO_CITY_DB']
+    ENV['SXGEO_CITY_DB']
   end
 
   let(:country_info) do
