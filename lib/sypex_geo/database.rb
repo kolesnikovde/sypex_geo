@@ -41,9 +41,9 @@ module SypexGeo
       @m_idx_arr = @file.read(@m_idx_len * 4).scan(/.{1,4}/m)
 
       @block_len = 3 + @id_len
-      @db_begin = @file.tell
-      @regions_begin = @db_begin + @db_items * @block_len
-      @cities_begin = @regions_begin + @region_size
+      @db = @file.read(@db_items * @block_len)
+      @regions_db = @file.read(@region_size) if @region_size > 0
+      @cities_db = @file.read(@city_size) if @city_size > 0
     end
 
     def search(ip)
@@ -90,12 +90,7 @@ module SypexGeo
     end
 
     def search_db(ipn, min, max)
-      len = max - min
-      @file.pos = @db_begin + min * @block_len
-      search_db_chunk(@file.read(len * @block_len), ipn, 0, len - 1)
-    end
-
-    def search_db_chunk(data, ipn, min, max)
+      data = @db
       block_len = @block_len
 
       if max - min > 1
@@ -123,10 +118,9 @@ module SypexGeo
     end
 
     def read_data(seek, limit, type)
-      @file.pos = (type == TYPE_REGION ? @regions_begin : @cities_begin) + seek
-      Pack.parse(@pack[type], @file.read(limit))
+      raw = (type == TYPE_REGION ? @regions_db : @cities_db)[seek, limit]
+      Pack.parse(@pack[type], raw)
     end
-
     def read_country(seek)
       read_data(seek, @max_country, TYPE_COUNTRY)
     end

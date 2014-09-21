@@ -64,10 +64,6 @@ db.lookup(<IPv4 address>, true)
 #     name_en: 'Russia'
 #   }
 # }
-
-# "memory_mode"
-db = SypexGeo::MemoryDatabase.new('./SxGeoCity.dat')
-db.lookup(<IPv4 address>)
 ```
 
 ## Testing

@@ -1,5 +1,4 @@
 require 'sypex_geo/database'
-require 'sypex_geo/memory_database'
 require 'sypex_geo/pack'
 require 'sypex_geo/version'
 

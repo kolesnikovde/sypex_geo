@@ -130,10 +130,4 @@ describe SypexGeo do
       end
     end
   end
-
-  describe SypexGeo::MemoryDatabase do
-    subject(:db) { SypexGeo::MemoryDatabase.new(city_db_file) }
-
-    it_behaves_like 'geoip_database'
-  end
 end
