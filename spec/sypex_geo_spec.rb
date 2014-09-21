@@ -37,8 +37,8 @@ describe SypexGeo do
     {
       city: {
         id: 524901,
-        lat: 55,
-        lon: 37,
+        lat: 55.75222,
+        lon: 37.61556,
         name_ru: 'Москва',
         name_en: 'Moscow'
       },
@@ -54,8 +54,8 @@ describe SypexGeo do
     {
       city: {
         id: 524901,
-        lat: 55,
-        lon: 37,
+        lat: 55.75222,
+        lon: 37.61556,
         name_ru: 'Москва',
         name_en: 'Moscow'
       },
@@ -68,8 +68,8 @@ describe SypexGeo do
       country: {
         id: 185,
         iso: 'RU',
-        lat: 60,
-        lon: 100,
+        lat: 60.0,
+        lon: 100.0,
         name_ru: 'Россия',
         name_en: 'Russia'
       }
