@@ -6,8 +6,8 @@ rvm:
   - 2.1.0
 
 env:
-  - SYPEXGEO_COUNTRY_DB=SxGeoCountry.dat
-  - SYPEXGEO_CITY_DB=SxGeoCity.dat
+  - SXGEO_DB=SxGeo.dat
+  - SXGEO_CITY_DB=SxGeoCity.dat
 
 before_script:
   - 'wget http://sypexgeo.net/files/SxGeoCountry.zip && unzip SxGeoCountry.zip'
