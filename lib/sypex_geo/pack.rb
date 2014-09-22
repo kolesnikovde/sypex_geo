@@ -1,9 +1,5 @@
 module SypexGeo
   class Pack
-    def self.parse(pack, data)
-      new(pack).parse(data)
-    end
-
     def initialize(pack)
       @pack = pack
     end
