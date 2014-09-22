@@ -58,7 +58,11 @@ location.country_code
 
 ## Testing
 
-    $ SXGEO_DB=./SxGeo.dat SXGEO_CITY_DB=./SxGeoCity.dat rspec
+```sh
+$ wget http://sypexgeo.net/files/SxGeoCountry.zip && unzip SxGeoCountry.zip
+$ wget http://sypexgeo.net/files/SxGeoCity_utf8.zip && unzip SxGeoCity_utf8.zip
+$ SXGEO_DB=./SxGeo.dat SXGEO_CITY_DB=./SxGeoCity.dat rspec
+```
 
 ## License
 

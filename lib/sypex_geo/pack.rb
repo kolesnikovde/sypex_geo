@@ -65,12 +65,12 @@ module SypexGeo
 
     def read_int24(chunk)
       raw = read(3)
-      raw = raw + (raw[2].ord >> 7) > 0 ? "\xFF" : "\0"
+      raw += (raw[2].unpack('C')[0] >> 7) > 0 ? "\xFF" : "\x00"
       raw.unpack('l')[0]
     end
 
     def read_uint24(chunk)
-      (read(3) + "\0").unpack('L')[0]
+      (read(3) + "\x00").unpack('L')[0]
     end
 
     def read_int32(chunk)

@@ -47,7 +47,7 @@ module SypexGeo
     end
 
     def inspect
-      "#<#{self.class}:0x#{object_id} @version=#{@version}>"
+      to_s
     end
 
     protected

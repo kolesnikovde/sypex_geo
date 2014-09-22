@@ -1,20 +1,15 @@
 # coding: utf-8
 
-require './spec/spec_helper'
+require 'spec_helper'
 require 'sypex_geo'
 require 'ipaddr'
 
 describe SypexGeo do
-  let(:demo_ip) do
-    # Random Moscow IP.
-    '80.90.64.1'
-  end
-
-  let(:invalid_db_file) do
-    File.expand_path(__FILE__ + '/../support/invalid.dat')
-  end
-
   shared_examples 'geo db' do
+    let(:invalid_db_file) do
+      File.expand_path(__FILE__ + '/../support/invalid.dat')
+    end
+
     describe '#initialize' do
       it 'raises error if database is invalid' do
         expect do
@@ -43,10 +38,21 @@ describe SypexGeo do
         end.to raise_error(error)
       end
     end
+
+    describe '#inspect' do
+      it 'does not dump whole db' do
+        expect(subject.inspect).to eq(subject.to_s)
+      end
+    end
   end
 
   shared_examples 'city db' do
     it_behaves_like 'geo db'
+
+    let(:demo_ip) do
+      # Random Moscow IP.
+      '80.90.64.1'
+    end
 
     let(:city_info) do
       {
@@ -103,8 +109,13 @@ describe SypexGeo do
   shared_examples 'country db' do
     it_behaves_like 'geo db'
 
+    let(:demo_ip) do
+      # Google Public DNS.
+      '8.8.8.8'
+    end
+
     let(:country_code) do
-      'RU'
+      'US'
     end
 
     it { should be_country }
