@@ -11,7 +11,7 @@ env:
 
 before_script:
   - if [[ -n "$SXGEO_DB" ]]; then wget http://sypexgeo.net/files/SxGeoCountry.zip && unzip SxGeoCountry.zip; fi
-  - if [[ -n "$SXGEO_CITY_DB" ]]; then && wget http://sypexgeo.net/files/SxGeoCity_utf8.zip && unzip SxGeoCity_utf8.zip; fi
+  - if [[ -n "$SXGEO_CITY_DB" ]]; then wget http://sypexgeo.net/files/SxGeoCity_utf8.zip && unzip SxGeoCity_utf8.zip; fi
 
 addons:
   code_climate:
