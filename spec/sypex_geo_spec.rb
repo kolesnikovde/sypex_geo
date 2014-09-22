@@ -14,83 +14,21 @@ describe SypexGeo do
     File.expand_path(__FILE__ + '/../support/invalid.dat')
   end
 
-  let(:country_db_file) do
-    ENV['SXGEO_DB']
-  end
-
-  let(:city_db_file) do
-    ENV['SXGEO_CITY_DB']
-  end
-
-  let(:country_info) do
-    {
-      city: nil,
-      country: {
-        id: 185,
-        iso: 'RU'
-      },
-      region: nil
-    }
-  end
-
-  let(:city_info) do
-    {
-      city: {
-        id: 524901,
-        lat: 55.75222,
-        lon: 37.61556,
-        name_ru: 'Москва',
-        name_en: 'Moscow'
-      },
-      country: {
-        id: 185,
-        iso: 'RU'
-      },
-      region: nil
-    }
-  end
-
-  let(:location_info) do
-    {
-      city: {
-        id: 524901,
-        lat: 55.75222,
-        lon: 37.61556,
-        name_ru: 'Москва',
-        name_en: 'Moscow'
-      },
-      region: {
-        id: 524894,
-        name_ru: 'Москва',
-        name_en: 'Moskva',
-        iso: 'RU-MOW'
-      },
-      country: {
-        id: 185,
-        iso: 'RU',
-        lat: 60.0,
-        lon: 100.0,
-        name_ru: 'Россия',
-        name_en: 'Russia'
-      }
-    }
-  end
-
-  shared_examples 'geoip_database' do
+  shared_examples 'geo db' do
     describe '#initialize' do
       it 'raises error if database is invalid' do
         expect do
-          subject.class.new(invalid_db_file)
+          described_class.new(invalid_db_file)
         end.to raise_error(SypexGeo::DatabaseError)
       end
     end
 
-    describe '#lookup' do
+    describe '#query' do
       it 'returns nil if IP address is reserved' do
-        expect(subject.lookup('0.0.0.0')).to be_nil
-        expect(subject.lookup('127.0.0.0')).to be_nil
-        expect(subject.lookup('224.0.0.0')).to be_nil
-        expect(subject.lookup('255.0.0.0')).to be_nil
+        expect(subject.query('0.0.0.0')).to be_nil
+        expect(subject.query('127.0.0.0')).to be_nil
+        expect(subject.query('224.0.0.0')).to be_nil
+        expect(subject.query('255.0.0.0')).to be_nil
       end
 
       it 'raises error if IP address is invalid' do
@@ -101,32 +39,98 @@ describe SypexGeo do
                 end
 
         expect do
-          subject.lookup('1.invalid')
+          subject.query('1.invalid')
         end.to raise_error(error)
       end
+    end
+  end
 
-      it 'returns city info' do
-        expect(subject.lookup(demo_ip)).to eq(city_info)
+  shared_examples 'city db' do
+    it_behaves_like 'geo db'
+
+    let(:city_info) do
+      {
+        id: 524901,
+        country_id: 185,
+        lat: 55.75222,
+        lon: 37.61556,
+        name_ru: 'Москва',
+        name_en: 'Moscow',
+        region_seek: 11795
+      }
+    end
+
+    let(:region_info) do
+      {
+        id: 524894,
+        iso: 'RU-MOW',
+        name_ru: 'Москва',
+        name_en: 'Moskva',
+        country_seek: 9128
+      }
+    end
+
+    let(:country_info) do
+      {
+        id: 185,
+        iso: 'RU',
+        lat: 60.0,
+        lon: 100.0,
+        name_ru: 'Россия',
+        name_en: 'Russia'
+      }
+    end
+
+    let(:country_code) do
+      'RU'
+    end
+
+    it { should be_city }
+    it { should_not be_country }
+
+    describe '#query' do
+      it 'returns location info' do
+        location = subject.query(demo_ip)
+
+        expect(location.city).to eq(city_info)
+        expect(location.region).to eq(region_info)
+        expect(location.country).to eq(country_info)
+        expect(location.country_code).to eq(country_code)
       end
+    end
+  end
 
-      it 'returns detailed location info if specified' do
-        expect(subject.lookup(demo_ip, true)).to eq(location_info)
+  shared_examples 'country db' do
+    it_behaves_like 'geo db'
+
+    let(:country_code) do
+      'RU'
+    end
+
+    it { should be_country }
+    it { should_not be_city }
+
+    describe '#query' do
+      it 'returns country code' do
+        expect(subject.query(demo_ip).country_code).to eq(country_code)
       end
     end
   end
 
   describe SypexGeo::Database do
-    describe 'city db' do
-      subject(:db) { SypexGeo::Database.new(city_db_file) }
+    if ENV['SXGEO_CITY_DB']
+      context 'city db' do
+        subject { SypexGeo::Database.new(ENV['SXGEO_CITY_DB']) }
 
-      it_behaves_like 'geoip_database'
+        it_behaves_like 'city db'
+      end
     end
 
-    describe 'country db' do
-      subject(:db) { SypexGeo::Database.new(country_db_file) }
+    if ENV['SXGEO_DB']
+      context 'country db' do
+        subject { SypexGeo::Database.new(ENV['SXGEO_DB']) }
 
-      it 'returns country code' do
-        expect(subject.lookup(demo_ip)).to eq(country_info)
+        it_behaves_like 'country db'
       end
     end
   end

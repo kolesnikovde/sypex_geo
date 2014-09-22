@@ -23,47 +23,37 @@ And then execute:
 require 'sypex_geo'
 
 db = SypexGeo::Database.new('./SxGeoCity.dat')
-db.lookup(<IPv4 address>)
+location = db.query('<IPv4 address>')
+
+location.city
 # => {
-#   city: {
-#     id: 524901,
-#     lat: 55,
-#     lon: 37,
-#     name_ru: 'Москва',
-#     name_en: 'Moscow'
-#   },
-#   country: {
-#     id: 185,
-#     iso: 'RU'
-#   },
-#   region: nil
+#   id: 524901,
+#   lat: 55.75222,
+#   lon: 37.61556,
+#   name_ru: 'Москва',
+#   name_en: 'Moscow'
 # }
 
-# Query details.
-db.lookup(<IPv4 address>, true)
+location.region
 # => {
-#   city: {
-#     id: 524901,
-#     lat: 55,
-#     lon: 37,
-#     name_ru: 'Москва',
-#     name_en: 'Moscow'
-#   },
-#   region: {
-#     id: 524894,
-#     name_ru: 'Москва',
-#     name_en: 'Moskva',
-#     iso: 'RU-MOW'
-#   },
-#   country: {
-#     id: 185,
-#     iso: 'RU',
-#     lat: 60,
-#     lon: 100,
-#     name_ru: 'Россия',
-#     name_en: 'Russia'
-#   }
+#   id: 524894,
+#   iso: 'RU-MOW',
+#   name_ru: 'Москва',
+#   name_en: 'Moskva'
 # }
+
+location.country
+# => {
+#   id: 185,
+#   iso: 'RU',
+#   lat: 60.0,
+#   lon: 100.0,
+#   name_ru: 'Россия',
+#   name_en: 'Russia'
+# }
+
+location.country_code
+# => 'RU'
 ```
 
 ## Testing
