@@ -1,108 +1,76 @@
 module SypexGeo
   class Pack
     def initialize(pack)
-      @pack = pack
+      setup_pack(pack)
     end
 
     def parse(data)
-      @data = data
-      @pos = 0
-      result = {}
-
-      @pack.split('/').each do |part|
-        chunk, name = part.split(':')
-        result[name.to_sym] = parse_chunk(chunk)
-      end
-
-      result
+      Hash[@keys.zip(process(data.unpack(@format)))]
     end
 
     protected
 
-    def parse_chunk(chunk)
-      case chunk[0]
-      when 't' then read_int8(chunk)
-      when 'T' then read_uint8(chunk)
-      when 's' then read_int16(chunk)
-      when 'S' then read_uint16(chunk)
-      when 'm' then read_int24(chunk)
-      when 'M' then read_uint24(chunk)
-      when 'i' then read_int32(chunk)
-      when 'I' then read_uint32(chunk)
-      when 'f' then read_float(chunk)
-      when 'd' then read_double(chunk)
-      when 'n' then read_decimal16(chunk)
-      when 'N' then read_decimal32(chunk)
-      when 'c' then read_chars(chunk)
-      when 'b' then read_blob(chunk)
+    def setup_pack(pack)
+      @keys = []
+      @format = ''
+      @processors = []
+
+      pack.split('/').each do |part|
+        chunk, key = part.split(':')
+        parser = chunk_parser(chunk)
+
+        @keys       << key.to_sym
+        @format     << parser.shift
+        @processors << (parser.empty? ? nil : parser)
       end
     end
 
-    def read(len)
-      @pos += len
-      @data[@pos - len, len]
+    def process(vals)
+      vals.each_with_index.map do |val, i|
+        if processor = @processors[i]
+          name = processor.shift
+          args = processor
+          args.unshift(val)
+          send(name, *args)
+        else
+          val
+        end
+      end
     end
 
-    def read_string(len)
-      read(len).strip.force_encoding('UTF-8')
+    def chunk_parser(chunk)
+      case chunk[0]
+      when 't' then [ 'c' ]
+      when 'T' then [ 'C' ]
+      when 's' then [ 's' ]
+      when 'S' then [ 'S' ]
+      when 'm' then [ 'a3', :parse_int24 ]
+      when 'M' then [ 'a3', :parse_uint24 ]
+      when 'i' then [ 'l' ]
+      when 'I' then [ 'L' ]
+      when 'f' then [ 'f' ]
+      when 'd' then [ 'D' ]
+      when 'n' then [ 'a2', :parse_decimal, 's', chunk[1] ]
+      when 'N' then [ 'a4', :parse_decimal, 'l', chunk[1] ]
+      when 'c' then [ 'a' + chunk[1], :parse_string ]
+      when 'b' then [ 'Z*', :parse_string ]
+      end
     end
 
-    def read_int8(chunk)
-      read(1).unpack('c')[0]
+    def parse_int24(val)
+      (val + (val[2].ord >> 7 > 0 ? "\xFF" : "\x00").b).unpack('l')[0]
     end
 
-    def read_uint8(chunk)
-      read(1).unpack('C')[0]
+    def parse_uint24(val)
+      (val + "\x00").unpack('L')[0]
     end
 
-    def read_int16(chunk)
-      read(2).unpack('s')[0]
+    def parse_decimal(val, format, fract)
+      val.unpack(format)[0].to_f / (10 ** fract.to_i)
     end
 
-    def read_uint16(chunk)
-      read(2).unpack('S')[0]
-    end
-
-    def read_int24(chunk)
-      raw = read(3)
-      raw += (raw[2].unpack('C')[0] >> 7) > 0 ? "\xFF" : "\x00"
-      raw.unpack('l')[0]
-    end
-
-    def read_uint24(chunk)
-      (read(3) + "\x00").unpack('L')[0]
-    end
-
-    def read_int32(chunk)
-      read(4).unpack('l')[0]
-    end
-
-    def read_uint32(chunk)
-      read(4).unpack('L')[0]
-    end
-
-    def read_float(chunk)
-      read(4).unpack('f')[0]
-    end
-
-    def read_double(chunk)
-      read(8).unpack('d')[0]
-    end
-
-    def read_decimal16(chunk)
-      read(2).unpack('s')[0].to_f / (10 ** chunk[1].to_i)
-    end
-
-    def read_decimal32(chunk)
-      read(4).unpack('l')[0].to_f / (10 ** chunk[1].to_i)
-    end
-
-    def read_chars(chunk)
-      read_string(chunk[1..-1].to_i)
-    end
-
-    def read_blob(chunk)
-      read_string(@data.index("\0", @pos) - @pos + 1)
+    def parse_string(val)
+      val.strip.force_encoding('UTF-8')
     end
   end
 end
