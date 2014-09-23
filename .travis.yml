@@ -6,12 +6,11 @@ rvm:
   - 2.1.0
 
 env:
-  - SXGEO_DB=SxGeo.dat
-  - SXGEO_CITY_DB=SxGeoCity.dat
+  - SXGEO_DB=SxGeo.dat SXGEO_CITY_DB=SxGeoCity.dat
 
 before_script:
-  - if [[ -n "$SXGEO_DB" ]]; then wget http://sypexgeo.net/files/SxGeoCountry.zip && unzip SxGeoCountry.zip; fi
-  - if [[ -n "$SXGEO_CITY_DB" ]]; then wget http://sypexgeo.net/files/SxGeoCity_utf8.zip && unzip SxGeoCity_utf8.zip; fi
+  - wget http://sypexgeo.net/files/SxGeoCountry.zip && unzip SxGeoCountry.zip
+  - wget http://sypexgeo.net/files/SxGeoCity_utf8.zip && unzip SxGeoCity_utf8.zip
 
 addons:
   code_climate:
