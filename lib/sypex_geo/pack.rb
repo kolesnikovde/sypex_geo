@@ -58,7 +58,8 @@ module SypexGeo
     end
 
     def parse_int24(val)
-      (val + (val[2].ord >> 7 > 0 ? "\xFF" : "\x00").b).unpack('l')[0]
+      val += (val[2].ord >> 7 > 0 ? "\xFF" : "\x00").force_encoding('BINARY')
+      val.unpack('l')[0]
     end
 
     def parse_uint24(val)
