@@ -61,8 +61,7 @@ describe SypexGeo do
         lat: 55.75222,
         lon: 37.61556,
         name_ru: 'Москва',
-        name_en: 'Moscow',
-        region_seek: 11795
+        name_en: 'Moscow'
       }
     end
 
@@ -71,8 +70,7 @@ describe SypexGeo do
         id: 524894,
         iso: 'RU-MOW',
         name_ru: 'Москва',
-        name_en: 'Moskva',
-        country_seek: 9128
+        name_en: 'Moskva'
       }
     end
 
@@ -98,10 +96,25 @@ describe SypexGeo do
       it 'returns location info' do
         location = subject.query(demo_ip)
 
-        expect(location.city).to eq(city_info)
-        expect(location.region).to eq(region_info)
-        expect(location.country).to eq(country_info)
-        expect(location.country_code).to eq(country_code)
+        city = location.city
+        region = location.region
+        country = location.country
+        code = location.country_code
+
+        city.delete(:region_seek)
+        region.delete(:country_seek)
+
+        expect(city).to eq(city_info)
+        expect(region).to eq(region_info)
+        expect(country).to eq(country_info)
+        expect(code).to eq(country_code)
+      end
+
+      it 'returns same results for same IP' do
+        location_a = subject.query(demo_ip)
+        location_b = subject.query(demo_ip)
+
+        expect(location_a.city[:name_en]).to eq(location_b.city[:name_en])
       end
     end
   end

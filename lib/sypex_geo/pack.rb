@@ -28,8 +28,8 @@ module SypexGeo
     def process(vals)
       vals.each_with_index.map do |val, i|
         if processor = @processors[i]
-          name = processor.shift
-          args = processor
+          name = processor[0]
+          args = processor[1..-1]
           args.unshift(val)
           send(name, *args)
         else
