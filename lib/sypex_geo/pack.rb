@@ -1,7 +1,7 @@
 module SypexGeo
   class Pack
-    def initialize(pack)
-      setup_pack(pack)
+    def initialize(fmt)
+      compile(fmt)
     end
 
     def parse(data)
@@ -10,28 +10,25 @@ module SypexGeo
 
     protected
 
-    def setup_pack(pack)
+    def compile(fmt)
       @keys = []
       @format = ''
       @processors = []
 
-      pack.split('/').each do |part|
+      fmt.split('/').each do |part|
         chunk, key = part.split(':')
-        parser = chunk_parser(chunk)
+        format, processor = chunk_parser(chunk)
 
         @keys       << key.to_sym
-        @format     << parser.shift
-        @processors << (parser.empty? ? nil : parser)
+        @format     << format
+        @processors << processor
       end
     end
 
-    def process(vals)
-      vals.each_with_index.map do |val, i|
+    def process(raw_values)
+      raw_values.each_with_index.map do |val, i|
         if processor = @processors[i]
-          name = processor[0]
-          args = processor[1..-1]
-          args.unshift(val)
-          send(name, *args)
+          processor.call(val)
         else
           val
         end
@@ -44,16 +41,16 @@ module SypexGeo
       when 'T' then [ 'C' ]
       when 's' then [ 's' ]
       when 'S' then [ 'S' ]
-      when 'm' then [ 'a3', :parse_int24 ]
-      when 'M' then [ 'a3', :parse_uint24 ]
+      when 'm' then [ 'a3', ->(val){ parse_int24(val) } ]
+      when 'M' then [ 'a3', ->(val){ parse_uint24(val) } ]
       when 'i' then [ 'l' ]
       when 'I' then [ 'L' ]
       when 'f' then [ 'f' ]
       when 'd' then [ 'D' ]
-      when 'n' then [ 'a2', :parse_decimal, 's', chunk[1] ]
-      when 'N' then [ 'a4', :parse_decimal, 'l', chunk[1] ]
-      when 'c' then [ 'a' + chunk[1], :parse_string ]
-      when 'b' then [ 'Z*', :parse_string ]
+      when 'n' then [ 'a2', ->(val){ parse_decimal(val, 's', chunk[1]) } ]
+      when 'N' then [ 'a4', ->(val){ parse_decimal(val, 'l', chunk[1]) } ]
+      when 'c' then [ 'a' + chunk[1], ->(val){ parse_string(val) } ]
+      when 'b' then [ 'Z*', ->(val){ parse_string(val) } ]
       end
     end
 
