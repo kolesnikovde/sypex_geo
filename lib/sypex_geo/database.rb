@@ -86,8 +86,15 @@ module SypexGeo
       ipn = IPAddr.new(ip).hton
 
       if max - min > range
-        min = range * main_idx_search(ipn, min / range, (max / range) - 1)
-        max = min + range
+        part = main_idx_search(ipn, min / range, (max / range) - 1)
+        min = part > 0 ?
+          part * range :
+          0
+        max = part > @main_idx_size ?
+          @db_records_count :
+          (part + 1 ) * range
+        min = @block_idx[octet - 1] if min < @block_idx[octet - 1]
+        max = @block_idx[octet] if max > @block_idx[octet - 1]
       end
 
       db_search(ipn, min, max)
@@ -96,15 +103,19 @@ module SypexGeo
     def main_idx_search(ipn, min, max)
       idx = @main_idx
 
-      while min < max
+      while max - min > 8
         mid = (min + max) / 2
 
         if ipn > idx[mid]
-          min = mid + 1
+          min = mid
         else
           max = mid
         end
       end
+
+      begin
+        min+=1
+      end while (ipn > idx[min]) && (min <= max)
 
       min
     end
