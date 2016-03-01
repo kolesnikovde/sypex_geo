@@ -131,7 +131,7 @@ describe SypexGeo do
 
            context ip do
 
-            let(:result) { subject.query(ip).city; subject.query(ip).city }
+            let(:result) { subject.query(ip).city }
 
             it "should have valid lat and lon" do
               expect(result[:lon]).to be_within(180).of(0)
@@ -139,11 +139,11 @@ describe SypexGeo do
             end
 
             it "should have latin name_en" do
-              expect(result[:name_en]).to match(/^[\p{Punct}\p{Space}\p{Latin}]+$/i)
+              expect(result[:name_en]).to match(/^[\p{Punct}\p{Space}\p{Latin}]*$/i)
             end
 
             it "should have cyrillic name_ru" do
-              expect(result[:name_ru]).to match(/^[\p{Punct}\p{Cyrillic}\p{Latin}]+$/i)
+              expect(result[:name_ru]).to match(/^[\p{Punct}\p{Cyrillic}\p{Latin}]*$/i)
             end
 
           end

@@ -24,18 +24,24 @@ module SypexGeo
     end
 
     def read_country(position)
-      @country_parser ||= Pack.new(@country_pack)
-      @country_parser.parse(@cities_db[position, @country_size])
+      country_parser.parse(@cities_db[position, @country_size])
     end
 
     def read_region(position)
-      @region_parser ||= Pack.new(@region_pack)
-      @region_parser.parse(@regions_db[position, @region_size])
+      region_parser.parse(@regions_db[position, @region_size])
     end
 
     def read_city(position)
-      @city_parser ||= Pack.new(@city_pack)
-      @city_parser.parse(@cities_db[position, @city_size])
+      if position > @countries_db_size
+        city_parser.parse(@cities_db[position, @city_size])
+      else
+        country = country_parser.parse(@cities_db[position, @country_size])
+        city_parser.parse("").tap do |city|
+          city[:lat] = country[:lat]
+          city[:lon] = country[:lon]
+          city[:country_id] = country[:id]
+        end
+      end
     end
 
     def country?
@@ -87,12 +93,18 @@ module SypexGeo
 
       if max - min > range
         part = main_idx_search(ipn, min / range, (max / range) - 1)
-        min = part > 0 ?
-          part * range :
+
+        min = if part > 0
+          part * range
+        else
           0
-        max = part > @main_idx_size ?
-          @db_records_count :
+        end
+
+        max = if part > @main_idx_size
+          @db_records_count
+        else
           (part + 1 ) * range
+        end
         min = @block_idx[octet - 1] if min < @block_idx[octet - 1]
         max = @block_idx[octet] if max > @block_idx[octet - 1]
       end
@@ -134,8 +146,21 @@ module SypexGeo
           max = mid
         end
       end
+#      puts "db_search 2 min #{min} max #{max}"
 
       db[min * db_record_size - @id_size, @id_size].unpack('H*')[0].hex
+    end
+
+    def country_parser
+      @country_parser ||= Pack.new(@country_pack)
+    end
+
+    def city_parser
+      @city_parser ||= Pack.new(@city_pack)
+    end
+
+    def region_parser
+      @region_parser ||= Pack.new(@region_pack)
     end
   end
 end
