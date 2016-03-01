@@ -116,6 +116,39 @@ describe SypexGeo do
 
         expect(location_a.city[:name_en]).to eq(location_b.city[:name_en])
       end
+
+      context 'random ip results ' do
+        %w(51.187.93.98
+           195.250.51.10
+           71.138.87.212
+           69.180.167.139
+           33.217.182.174
+           106.116.216.250
+           177.220.41.166
+           128.53.65.28
+           44.230.230.185
+           22.45.239.43).each do |ip|
+
+           context ip do
+
+            let(:result) { subject.query(ip).city }
+
+            it "should have valid lat and lon" do
+              expect(result[:lon]).to be_within(180).of(0)
+              expect(result[:lat]).to be_within(90).of(0)
+            end
+
+            it "should have latin name_en" do
+              expect(result[:name_en]).to match(/^[\p{Punct}\p{Space}\p{Latin}]*$/i)
+            end
+
+            it "should have cyrillic name_ru" do
+              expect(result[:name_ru]).to match(/^[\p{Punct}\p{Cyrillic}\p{Latin}]*$/i)
+            end
+
+          end
+        end
+      end
     end
   end
 

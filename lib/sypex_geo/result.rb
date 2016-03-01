@@ -24,11 +24,14 @@ module SypexGeo
     end
 
     def region
-      @region ||= @database.read_region(city[:region_seek])
+      @region ||= city[:region_seek] && @database.read_region(city[:region_seek])
     end
 
     def country
-      @country ||= @database.read_country(region[:country_seek])
+      @country ||= begin
+        seek_position = (region && region[:country_seek]) || @position
+        @database.read_country(seek_position)
+      end
     end
 
     def country_code
