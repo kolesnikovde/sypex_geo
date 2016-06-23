@@ -36,7 +36,7 @@ module SypexGeo
         city_parser.parse(@cities_db[position, @city_size])
       else
         country = country_parser.parse(@cities_db[position, @country_size])
-        city_parser.parse("").tap do |city|
+        city_parser.parse('').tap do |city|
           city[:lat] = country[:lat]
           city[:lon] = country[:lon]
           city[:country_id] = country[:id]
@@ -93,18 +93,8 @@ module SypexGeo
 
       if max - min > range
         part = main_idx_search(ipn, min / range, (max / range) - 1)
-
-        min = if part > 0
-          part * range
-        else
-          0
-        end
-
-        max = if part > @main_idx_size
-          @db_records_count
-        else
-          (part + 1 ) * range
-        end
+        min = part > 0 ? part * range : 0
+        max = part > @main_idx_size ? @db_records_count : (part + 1 ) * range
         min = @block_idx[octet - 1] if min < @block_idx[octet - 1]
         max = @block_idx[octet] if max > @block_idx[octet - 1]
       end
@@ -126,7 +116,7 @@ module SypexGeo
       end
 
       begin
-        min+=1
+        min += 1
       end while (ipn > idx[min]) && (min <= max)
 
       min
@@ -146,7 +136,6 @@ module SypexGeo
           max = mid
         end
       end
-#      puts "db_search 2 min #{min} max #{max}"
 
       db[min * db_record_size - @id_size, @id_size].unpack('H*')[0].hex
     end
