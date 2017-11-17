@@ -20,7 +20,8 @@ module SypexGeo
     end
 
     def city
-     @database.read_city(@position).nil? ? nil : @city ||= @database.read_city(@position)
+      return @city if defined?(@city)
+      @city = @database.read_city(@position)
     end
 
     def region

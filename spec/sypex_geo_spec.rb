@@ -149,6 +149,26 @@ describe SypexGeo do
           end
         end
       end
+
+      context 'return nil if ip not present' do
+        let(:ip) { '78.172.97.26' }
+
+        it 'should return nil for city' do
+          expect(subject.query(ip).city).to eq(nil)
+        end
+
+        it 'should return nil for country' do
+          expect(subject.query(ip).country).to eq(nil)
+        end
+
+        it 'should return nil for region' do
+          expect(subject.query(ip).region).to eq(nil)
+        end
+
+        it 'should return nil for country code' do
+          expect(subject.query(ip).country_code).to eq(nil)
+        end
+      end
     end
   end
 
