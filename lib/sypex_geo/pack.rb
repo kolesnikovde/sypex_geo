@@ -5,7 +5,7 @@ module SypexGeo
     end
 
     def parse(data)
-      Hash[@keys.zip(process(data.unpack(@format)))]
+      data.nil? ? nil : Hash[@keys.zip(process(data.unpack(@format)))]
     end
 
     protected
