@@ -25,7 +25,7 @@ module SypexGeo
     end
 
     def region
-     city.nil? ? nil : @region ||= city[:region_seek] && @database.read_region(city[:region_seek])
+      city.nil? ? nil : @region ||= city[:region_seek] && @database.read_region(city[:region_seek])
     end
 
     def country
@@ -36,8 +36,8 @@ module SypexGeo
     end
 
     def country_code
-      city.nil? ? nil : @country_code ||= begin
-        COUNTRY_CODES[(@database.country? ? @position : city[:country_id]) - 1]
+      @country_code ||= begin
+        COUNTRY_CODES[(@database.country? ? @position : (city && city[:country_id])) - 1]
       end
     end
   end
