@@ -36,7 +36,7 @@ module SypexGeo
     end
 
     def country_code
-      @country_code ||= begin
+      city.nil? ? nil : @country_code ||= begin
         COUNTRY_CODES[(@database.country? ? @position : city[:country_id]) - 1]
       end
     end
