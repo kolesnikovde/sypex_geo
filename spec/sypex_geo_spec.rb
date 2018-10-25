@@ -169,6 +169,49 @@ describe SypexGeo do
           expect(subject.query(ip).country_code).to eq(nil)
         end
       end
+
+      context 'when db store only country info' do
+        let(:ip) { '31.66.179.96' }
+
+        let(:city_info) do
+          {
+            id: nil,
+            country_id: 77,
+            lat: 54.76,
+            lon: -2.7,
+            name_ru: '',
+            name_en: '',
+            region_seek: nil
+          }
+        end
+
+        let(:country_info) do
+          {
+            id: 77,
+            iso: 'GB',
+            lat: 54.76,
+            lon: -2.7,
+            name_en: 'United Kingdom',
+            name_ru: 'Великобритания'
+          }
+        end
+
+        it 'should return right city' do
+          expect(subject.query(ip).city).to eq(city_info)
+        end
+
+        it 'should return right country' do
+          expect(subject.query(ip).country).to eq(country_info)
+        end
+
+        it 'should return nil for region' do
+          expect(subject.query(ip).region).to eq(nil)
+        end
+
+        it 'should return right country code' do
+          expect(subject.query(ip).country_code).to eq('GB')
+        end
+      end
     end
   end
 

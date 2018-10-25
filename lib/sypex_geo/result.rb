@@ -29,10 +29,10 @@ module SypexGeo
     end
 
     def country
-      region.nil? ? nil : @country ||= begin
-        seek_position = (region && region[:country_seek]) || @position
-        @database.read_country(seek_position)
-      end
+      seek_position = region ? region[:country_seek] : @position
+      return unless seek_position
+
+      @database.read_country(seek_position)
     end
 
     def country_code
