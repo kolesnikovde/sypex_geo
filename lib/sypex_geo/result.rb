@@ -37,7 +37,13 @@ module SypexGeo
 
     def country_code
       @country_code ||= begin
-        COUNTRY_CODES[(@database.country? ? @position : (city && city[:country_id])) - 1]
+        country_index = if @database.country?
+                          @position
+                        elsif city
+                          city[:country_id]
+                        end
+
+        COUNTRY_CODES[country_index - 1] if country_index
       end
     end
   end
