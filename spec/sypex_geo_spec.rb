@@ -151,7 +151,7 @@ describe SypexGeo do
       end
 
       context 'return nil if ip not present' do
-        let(:ip) { '78.172.97.26' }
+        let(:ip) { '212.5.219.198' }
 
         it 'should return nil for city' do
           expect(subject.query(ip).city).to eq(nil)
